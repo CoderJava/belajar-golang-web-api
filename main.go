@@ -9,19 +9,23 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"name": "Yudi Setiawan",
-			"bio":  "A Software Engineer",
-		})
-	})
+	router.GET("/", rootHandler)
 
-	router.GET("/hello", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"content":  "Hello World",
-			"subtitle": "Belajar Golang",
-		})
-	})
+	router.GET("/hello", helloHandler)
 
 	router.Run()
+}
+
+func rootHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"name": "Yudi Setiawan",
+		"bio":  "A Software Engineer",
+	})
+}
+
+func helloHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"content":  "Hello World",
+		"subtitle": "Belajar Golang",
+	})
 }
