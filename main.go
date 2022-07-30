@@ -1,23 +1,22 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
+
+	handlerV1 "pustaka-api/handler/v1"
 )
 
 func main() {
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
-	v1.GET("/", rootHandler)
-	v1.GET("/hello", helloHandler)
-	v1.GET("/books/:id/:title", booksHandler)
-	v1.GET("/query", queryHandler)
-	v1.POST("/books", postBooksHandler)
+	v1.GET("/", handlerV1.RootHandler)
+	v1.GET("/hello", handlerV1.HelloHandler)
+	v1.GET("/books/:id/:title", handlerV1.BooksHandler)
+	v1.POST("/books", handlerV1.PostBooksHandler)
+	v1.GET("/query", handlerV1.QueryHandler)
 
 	v2 := router.Group("/v2")
 	v2.GET("/", rootHandlerV2)
@@ -25,75 +24,8 @@ func main() {
 	router.Run()
 }
 
-func rootHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"name": "Yudi Setiawan",
-		"bio":  "A Software Engineer",
-	})
-}
-
 func rootHandlerV2(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Welcome to the V2",
 	})
-}
-
-func helloHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"content":  "Hello World",
-		"subtitle": "Belajar Golang",
-	})
-}
-
-func booksHandler(c *gin.Context) {
-	id := c.Param("id")
-	title := c.Param("title")
-	c.JSON(http.StatusOK, gin.H{
-		"id":    id,
-		"title": title,
-	})
-}
-
-func queryHandler(c *gin.Context) {
-	title := c.Query("title")
-	price := c.Query("price")
-	c.JSON(http.StatusOK, gin.H{
-		"title": title,
-		"price": price,
-	})
-}
-
-func postBooksHandler(c *gin.Context) {
-	var bookInput BookInput
-
-	err := c.ShouldBindJSON(&bookInput)
-	if err != nil {
-		errorMessages := []map[string]string{}
-		for _, e := range err.(validator.ValidationErrors) {
-			field := strings.ToLower(e.Field())
-			error := e.ActualTag()
-			errorMessage := map[string]string{
-				"field": field,
-				"error": error,
-			}
-			errorMessages = append(errorMessages, errorMessage)
-		}
-
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": errorMessages,
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"title":    bookInput.Title,
-		"price":    bookInput.Price,
-		"subtitle": bookInput.SubTitle,
-	})
-}
-
-type BookInput struct {
-	Title    string      `json:"title" binding:"required"`
-	Price    json.Number `json:"price" binding:"required,number"`
-	SubTitle string      `json:"sub_title"`
 }
