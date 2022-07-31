@@ -20,53 +20,14 @@ func main() {
 	}
 	db.AutoMigrate(&book.Book{})
 
-	// bookRepository := book.NewRepository(db)
+	bookRepository := book.NewRepository(db)
+	bookService := book.NewService(bookRepository)
 
-	// Find all
-	/* books, err := bookRepository.FindAll()
-	if err != nil {
-		fmt.Println("Error finding all books")
-		return
+	bookRequest := book.BookRequest{
+		Title: "Gundam",
+		Price: "200000",
 	}
-	for _, book := range books {
-		fmt.Println("Title:", book.Title)
-	} */
-
-	// Find by ID
-	/* book, err := bookRepository.FindById(2)
-	if err != nil {
-		fmt.Println("Error find by ID")
-		return
-	}
-	fmt.Println("Title:", book.Title) */
-
-	// Create
-	/* book := book.Book{
-		Title:       "Belajar Golang",
-		Description: "Buku ini sangat direkomendasikan untuk belajar Golang bgi pemula",
-		Price:       120000,
-		Discount:    20,
-		Rating:      4,
-	}
-	newBook, err := bookRepository.Create(book)
-	if err != nil {
-		fmt.Println("Error creating data")
-		return
-	}
-	fmt.Printf("Buku berhasil disimpan %v", newBook) */
-
-	// Delete by ID
-	/* book, err := bookRepository.FindById(4)
-	if err != nil {
-		fmt.Println("Error find by ID")
-		return
-	}
-	newBook, err := bookRepository.DeleteById(book, 4)
-	if err != nil {
-		fmt.Println("Error deleting data")
-		return
-	}
-	fmt.Printf("Buku dengan title %s berhasil dihapus", newBook.Title) */
+	bookService.Create(bookRequest)
 
 	router := gin.Default()
 
@@ -81,4 +42,11 @@ func main() {
 	v2.GET("/", handlerV2.RootHandler)
 
 	router.Run()
+
+	// main
+	// handler
+	// service
+	// repository
+	// db
+	// mariadb
 }
