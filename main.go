@@ -75,6 +75,23 @@ func main() {
 	// 	return
 	// }
 
+	// Delete
+	// var book book.Book
+	// err = db.Where("id = ?", 1).First(&book).Error
+	// if err != nil {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("=========================")
+	// 	return
+	// }
+	// err = db.Delete(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error deleting book record")
+	// 	fmt.Println("==========================")
+	// 	return
+	// }
+
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
