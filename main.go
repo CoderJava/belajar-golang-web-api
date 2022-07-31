@@ -43,19 +43,37 @@ func main() {
 	// err = db.First(&book).Error // first record
 	// err = db.Last(&book).Error // last record
 	// err = db.First(&book, 1).Error // find by primary key
-	var books []book.Book
+	// var books []book.Book
 	// err = db.Find(&books).Error // select all
-	err = db.Where("rating = ?", 5).Find(&books).Error // find by rating
-	if err != nil {
-		fmt.Println("=========================")
-		fmt.Println("Error finding book record")
-		fmt.Println("=========================")
-		return
-	}
-	for _, b := range books {
-		fmt.Println("Title: ", b.Title)
-		fmt.Printf("book object: %v\n", b)
-	}
+	// err = db.Where("rating = ?", 5).Find(&books).Error // find by rating
+	// if err != nil {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("=========================")
+	// 	return
+	// }
+	// for _, b := range books {
+	// 	fmt.Println("Title: ", b.Title)
+	// 	fmt.Printf("book object: %v\n", b)
+	// }
+
+	// Update
+	// var book book.Book
+	// err = db.Debug().Where("id = ?", 1).First(&book).Error
+	// if err != nil {
+	// 	fmt.Println("=========================")
+	// 	fmt.Println("Error finding book record")
+	// 	fmt.Println("=========================")
+	// 	return
+	// }
+	// book.Title = "Man Tiger (Revised edition)"
+	// err = db.Save(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error updating book record")
+	// 	fmt.Println("==========================")
+	// 	return
+	// }
 
 	router := gin.Default()
 
