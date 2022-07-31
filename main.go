@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
 	handlerV1 "pustaka-api/handler/v1"
+	handlerV2 "pustaka-api/handler/v2"
 )
 
 func main() {
@@ -19,13 +18,7 @@ func main() {
 	v1.GET("/query", handlerV1.QueryHandler)
 
 	v2 := router.Group("/v2")
-	v2.GET("/", rootHandlerV2)
+	v2.GET("/", handlerV2.RootHandler)
 
 	router.Run()
-}
-
-func rootHandlerV2(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Welcome to the V2",
-	})
 }
