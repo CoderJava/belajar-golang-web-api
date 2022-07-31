@@ -23,17 +23,38 @@ func main() {
 	// CRUD
 
 	// Create
-	book := book.Book{}
-	book.Title = "Atomic Habits"
-	book.Price = 120000
-	book.Discount = 15
-	book.Rating = 4
-	book.Description = "Buku self developent tentang membangun kebiasaan baik dan menghilangkan kebiasaan buruk"
-	err = db.Create(&book).Error
+	// book := book.Book{}
+	// book.Title = "Atomic Habits"
+	// book.Price = 120000
+	// book.Discount = 15
+	// book.Rating = 4
+	// book.Description = "Buku self developent tentang membangun kebiasaan baik dan menghilangkan kebiasaan buruk"
+	// err = db.Create(&book).Error
+	// if err != nil {
+	// 	fmt.Println("==========================")
+	// 	fmt.Println("Error creating book record")
+	// 	fmt.Println("==========================")
+	//  return
+	// }
+
+	// Read
+	// var book book.Book
+	// err = db.Debug().First(&book).Error // untuk debug mode
+	// err = db.First(&book).Error // first record
+	// err = db.Last(&book).Error // last record
+	// err = db.First(&book, 1).Error // find by primary key
+	var books []book.Book
+	// err = db.Find(&books).Error // select all
+	err = db.Where("rating = ?", 5).Find(&books).Error // find by rating
 	if err != nil {
-		fmt.Println("==========================")
-		fmt.Println("Error creating book record")
-		fmt.Println("==========================")
+		fmt.Println("=========================")
+		fmt.Println("Error finding book record")
+		fmt.Println("=========================")
+		return
+	}
+	for _, b := range books {
+		fmt.Println("Title: ", b.Title)
+		fmt.Printf("book object: %v\n", b)
 	}
 
 	router := gin.Default()
