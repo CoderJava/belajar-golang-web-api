@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,21 @@ func main() {
 		log.Fatal("Db connection error")
 	}
 	db.AutoMigrate(&book.Book{})
+	// CRUD
+
+	// Create
+	book := book.Book{}
+	book.Title = "Atomic Habits"
+	book.Price = 120000
+	book.Discount = 15
+	book.Rating = 4
+	book.Description = "Buku self developent tentang membangun kebiasaan baik dan menghilangkan kebiasaan buruk"
+	err = db.Create(&book).Error
+	if err != nil {
+		fmt.Println("==========================")
+		fmt.Println("Error creating book record")
+		fmt.Println("==========================")
+	}
 
 	router := gin.Default()
 
