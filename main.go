@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -20,77 +19,54 @@ func main() {
 		log.Fatal("Db connection error")
 	}
 	db.AutoMigrate(&book.Book{})
-	// CRUD
+
+	// bookRepository := book.NewRepository(db)
+
+	// Find all
+	/* books, err := bookRepository.FindAll()
+	if err != nil {
+		fmt.Println("Error finding all books")
+		return
+	}
+	for _, book := range books {
+		fmt.Println("Title:", book.Title)
+	} */
+
+	// Find by ID
+	/* book, err := bookRepository.FindById(2)
+	if err != nil {
+		fmt.Println("Error find by ID")
+		return
+	}
+	fmt.Println("Title:", book.Title) */
 
 	// Create
-	// book := book.Book{}
-	// book.Title = "Atomic Habits"
-	// book.Price = 120000
-	// book.Discount = 15
-	// book.Rating = 4
-	// book.Description = "Buku self developent tentang membangun kebiasaan baik dan menghilangkan kebiasaan buruk"
-	// err = db.Create(&book).Error
-	// if err != nil {
-	// 	fmt.Println("==========================")
-	// 	fmt.Println("Error creating book record")
-	// 	fmt.Println("==========================")
-	//  return
-	// }
+	/* book := book.Book{
+		Title:       "Belajar Golang",
+		Description: "Buku ini sangat direkomendasikan untuk belajar Golang bgi pemula",
+		Price:       120000,
+		Discount:    20,
+		Rating:      4,
+	}
+	newBook, err := bookRepository.Create(book)
+	if err != nil {
+		fmt.Println("Error creating data")
+		return
+	}
+	fmt.Printf("Buku berhasil disimpan %v", newBook) */
 
-	// Read
-	// var book book.Book
-	// err = db.Debug().First(&book).Error // untuk debug mode
-	// err = db.First(&book).Error // first record
-	// err = db.Last(&book).Error // last record
-	// err = db.First(&book, 1).Error // find by primary key
-	// var books []book.Book
-	// err = db.Find(&books).Error // select all
-	// err = db.Where("rating = ?", 5).Find(&books).Error // find by rating
-	// if err != nil {
-	// 	fmt.Println("=========================")
-	// 	fmt.Println("Error finding book record")
-	// 	fmt.Println("=========================")
-	// 	return
-	// }
-	// for _, b := range books {
-	// 	fmt.Println("Title: ", b.Title)
-	// 	fmt.Printf("book object: %v\n", b)
-	// }
-
-	// Update
-	// var book book.Book
-	// err = db.Debug().Where("id = ?", 1).First(&book).Error
-	// if err != nil {
-	// 	fmt.Println("=========================")
-	// 	fmt.Println("Error finding book record")
-	// 	fmt.Println("=========================")
-	// 	return
-	// }
-	// book.Title = "Man Tiger (Revised edition)"
-	// err = db.Save(&book).Error
-	// if err != nil {
-	// 	fmt.Println("==========================")
-	// 	fmt.Println("Error updating book record")
-	// 	fmt.Println("==========================")
-	// 	return
-	// }
-
-	// Delete
-	// var book book.Book
-	// err = db.Where("id = ?", 1).First(&book).Error
-	// if err != nil {
-	// 	fmt.Println("=========================")
-	// 	fmt.Println("Error finding book record")
-	// 	fmt.Println("=========================")
-	// 	return
-	// }
-	// err = db.Delete(&book).Error
-	// if err != nil {
-	// 	fmt.Println("==========================")
-	// 	fmt.Println("Error deleting book record")
-	// 	fmt.Println("==========================")
-	// 	return
-	// }
+	// Delete by ID
+	/* book, err := bookRepository.FindById(4)
+	if err != nil {
+		fmt.Println("Error find by ID")
+		return
+	}
+	newBook, err := bookRepository.DeleteById(book, 4)
+	if err != nil {
+		fmt.Println("Error deleting data")
+		return
+	}
+	fmt.Printf("Buku dengan title %s berhasil dihapus", newBook.Title) */
 
 	router := gin.Default()
 
