@@ -22,6 +22,8 @@ func main() {
 
 	bookRepository := book.NewRepository(db)
 	bookService := book.NewService(bookRepository)
+	// fileRepository := book.NewFileRepository()
+	// bookService := book.NewService(fileRepository)
 	bookHandler := handlerV1.NewBookHandler(bookService)
 
 	router := gin.Default()
