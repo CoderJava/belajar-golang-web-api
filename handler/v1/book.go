@@ -2,6 +2,7 @@ package v1
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -19,10 +20,93 @@ func BooksHandler(c *gin.Context) {
 	})
 }
 
-func PostBooksHandler(c *gin.Context) {
-	var bookInput book.BookRequest
+type bookHandler struct {
+	bookService book.Service
+}
 
-	err := c.ShouldBindJSON(&bookInput)
+func NewBookHandler(bookService book.Service) *bookHandler {
+	return &bookHandler{bookService}
+}
+
+func (h *bookHandler) GetAllBooksHandler(c *gin.Context) {
+	books, err := h.bookService.FindAll()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	booksResponse := []book.BookResponse{}
+	for _, entityBook := range books {
+		bookResponse := book.BookResponse{
+			ID:          entityBook.ID,
+			Title:       entityBook.Title,
+			Price:       entityBook.Price,
+			Description: entityBook.Description,
+			Rating:      entityBook.Rating,
+			Discount:    entityBook.Discount,
+		}
+		booksResponse = append(booksResponse, bookResponse)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": booksResponse,
+	})
+}
+
+func (h *bookHandler) GetBookHandler(c *gin.Context) {
+	paramId := c.Param("id")
+	id, err := strconv.Atoi(paramId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	bookData, err := h.bookService.FindById(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	bookResponse := book.BookResponse{
+		ID:          bookData.ID,
+		Title:       bookData.Title,
+		Price:       bookData.Price,
+		Description: bookData.Description,
+		Rating:      bookData.Rating,
+		Discount:    bookData.Discount,
+	}
+	c.JSON(http.StatusOK, bookResponse)
+}
+
+func (h *bookHandler) DeleteBookHandler(c *gin.Context) {
+	paramId := c.Param("id")
+	id, err := strconv.Atoi(paramId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	_, err = h.bookService.DeleteById(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"title":   "Success",
+		"message": "Book successfully deleted",
+	})
+}
+
+func (h *bookHandler) PostBooksHandler(c *gin.Context) {
+	var bookRequest book.BookRequest
+
+	err := c.ShouldBindJSON(&bookRequest)
 	if err != nil {
 		errorMessages := []map[string]string{}
 		for _, e := range err.(validator.ValidationErrors) {
@@ -41,9 +125,15 @@ func PostBooksHandler(c *gin.Context) {
 		return
 	}
 
+	book, err := h.bookService.Create(bookRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"title":    bookInput.Title,
-		"price":    bookInput.Price,
-		"subtitle": bookInput.SubTitle,
+		"data": book,
 	})
 }
