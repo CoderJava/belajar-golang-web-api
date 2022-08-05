@@ -137,3 +137,88 @@ func (h *bookHandler) PostBooksHandler(c *gin.Context) {
 		"data": book,
 	})
 }
+
+func (h *bookHandler) PutBookHandler(c *gin.Context) {
+	paramId := c.Param("id")
+	id, err := strconv.Atoi(paramId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	dataBook, err := h.bookService.FindById(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	if dataBook.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Data not found",
+		})
+		return
+	}
+
+	var bookRequest book.BookRequest
+	err = c.ShouldBindJSON(&bookRequest)
+	if err != nil {
+		errorMessages := []map[string]string{}
+		for _, e := range err.(validator.ValidationErrors) {
+			field := strings.ToLower(e.Field())
+			error := e.ActualTag()
+			errorMessage := map[string]string{
+				"field": field,
+				"error": error,
+			}
+			errorMessages = append(errorMessages, errorMessage)
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": errorMessages,
+		})
+		return
+	}
+
+	price, err := bookRequest.Price.Int64()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	rating, err := bookRequest.Rating.Int64()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	discount, err := bookRequest.Discount.Int64()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	dataBook.Title = bookRequest.Title
+	dataBook.Description = bookRequest.Description
+	dataBook.Price = int(price)
+	dataBook.Rating = int(rating)
+	dataBook.Discount = int(discount)
+
+	newDataBook, err := h.bookService.Update(dataBook)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, newDataBook)
+}
