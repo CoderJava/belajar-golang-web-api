@@ -38,14 +38,7 @@ func (h *bookHandler) GetAllBooksHandler(c *gin.Context) {
 	}
 	booksResponse := []book.BookResponse{}
 	for _, entityBook := range books {
-		bookResponse := book.BookResponse{
-			ID:          entityBook.ID,
-			Title:       entityBook.Title,
-			Price:       entityBook.Price,
-			Description: entityBook.Description,
-			Rating:      entityBook.Rating,
-			Discount:    entityBook.Discount,
-		}
+		bookResponse := convertEntityBookToBookResponse(entityBook)
 		booksResponse = append(booksResponse, bookResponse)
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -70,14 +63,7 @@ func (h *bookHandler) GetBookHandler(c *gin.Context) {
 		})
 		return
 	}
-	bookResponse := book.BookResponse{
-		ID:          bookData.ID,
-		Title:       bookData.Title,
-		Price:       bookData.Price,
-		Description: bookData.Description,
-		Rating:      bookData.Rating,
-		Discount:    bookData.Discount,
-	}
+	bookResponse := convertEntityBookToBookResponse(bookData)
 	c.JSON(http.StatusOK, bookResponse)
 }
 
@@ -221,4 +207,15 @@ func (h *bookHandler) PutBookHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, newDataBook)
+}
+
+func convertEntityBookToBookResponse(bookEntity book.Book) book.BookResponse {
+	return book.BookResponse{
+		ID:          bookEntity.ID,
+		Title:       bookEntity.Title,
+		Price:       bookEntity.Price,
+		Description: bookEntity.Description,
+		Rating:      bookEntity.Rating,
+		Discount:    bookEntity.Discount,
+	}
 }
