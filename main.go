@@ -36,8 +36,8 @@ func main() {
 	v1.GET("/books/:id/:title", handlerV1.BooksHandler)
 	v1.GET("/books", bookHandler.GetAllBooksHandler)
 	v1.GET("/books/:id", bookHandler.GetBookHandler)
-	v1.POST("/books", bookHandler.PostBooksHandler)
-	v1.PUT("/books/:id", bookHandler.PutBookHandler)
+	v1.POST("/books", bookHandler.CreateBookHandler)
+	v1.PUT("/books/:id", bookHandler.UpdateBookHandler)
 	v1.DELETE("/books/:id", bookHandler.DeleteBookHandler)
 
 	v2 := router.Group("/v2")

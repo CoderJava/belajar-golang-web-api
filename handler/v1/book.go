@@ -89,7 +89,7 @@ func (h *bookHandler) DeleteBookHandler(c *gin.Context) {
 	})
 }
 
-func (h *bookHandler) PostBooksHandler(c *gin.Context) {
+func (h *bookHandler) CreateBookHandler(c *gin.Context) {
 	var bookRequest book.BookRequest
 
 	err := c.ShouldBindJSON(&bookRequest)
@@ -122,7 +122,7 @@ func (h *bookHandler) PostBooksHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, convertEntityBookToBookResponse(book))
 }
 
-func (h *bookHandler) PutBookHandler(c *gin.Context) {
+func (h *bookHandler) UpdateBookHandler(c *gin.Context) {
 	var bookRequest book.BookRequest
 
 	err := c.ShouldBindJSON(&bookRequest)
